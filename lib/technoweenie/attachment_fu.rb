@@ -363,6 +363,11 @@ module Technoweenie # :nodoc:
       def with_image(&block)
         self.class.with_image(temp_path, &block)
       end
+      
+      # Returns a thumbnail by it's name if there are thumbnails
+      def find_thumbnail(thumbnail)
+        self.thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if self.thumbnails
+      end
 
       protected
         # Generates a unique filename for a Tempfile.
