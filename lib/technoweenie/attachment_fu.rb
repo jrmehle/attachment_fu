@@ -366,7 +366,13 @@ module Technoweenie # :nodoc:
       
       # Returns a thumbnail by it's name if there are thumbnails
       def find_thumbnail(thumbnail)
-        self.thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if self.thumbnails
+        self.thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if thumbnailable && self.thumbnails
+      end
+      
+      attachment_options[:thumbnails].each do |arg|
+        send :define_method, arg[0] do
+          find_thumbnail(arg[0])
+        end
       end
 
       protected
