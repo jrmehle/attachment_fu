@@ -74,6 +74,15 @@ module Technoweenie # :nodoc:
           m.belongs_to :parent, :class_name => "::#{base_class}" unless options[:thumbnails].empty?
         end
 
+        # Adds a "thumbnail_[name]" instance method for each thumbnail type.
+        unless attachment_options[:thumbnails].blank?
+          attachment_options[:thumbnails].each do |arg|
+            define_method("thumbnail_#{arg[0]}") {
+              find_thumbnail(arg[0])
+            }
+          end
+        end
+        
         storage_mod = Technoweenie::AttachmentFu::Backends.const_get("#{options[:storage].to_s.classify}Backend")
         include storage_mod unless included_modules.include?(storage_mod)
 
@@ -367,12 +376,6 @@ module Technoweenie # :nodoc:
       # Returns a thumbnail by it's name if there are thumbnails
       def find_thumbnail(thumbnail)
         self.thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if thumbnailable && self.thumbnails
-      end
-      
-      attachment_options[:thumbnails].each do |arg|
-        send :define_method, arg[0] do
-          find_thumbnail(arg[0])
-        end
       end
 
       protected
