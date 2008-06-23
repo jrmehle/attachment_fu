@@ -76,9 +76,9 @@ module Technoweenie # :nodoc:
 
         # Adds a "thumbnail_[name]" instance method for each thumbnail type.
         unless attachment_options[:thumbnails].blank?
-          attachment_options[:thumbnails].each do |arg|
-            define_method("thumbnail_#{arg[0]}") {
-              find_thumbnail(arg[0])
+          attachment_options[:thumbnails].keys.each do |arg|
+            define_method("thumbnail_#{arg}") {
+              find_thumbnail(arg)
             }
           end
         end
@@ -375,7 +375,7 @@ module Technoweenie # :nodoc:
       
       # Returns a thumbnail by it's name if there are thumbnails
       def find_thumbnail(thumbnail)
-        self.thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if thumbnailable && self.thumbnails
+        thumbnails.find(:first, :conditions => "thumbnail = '#{thumbnail}'") if thumbnailable?
       end
 
       protected
